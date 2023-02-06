@@ -29,10 +29,10 @@ public class SendTx {
     static String hash = Constant.TXHASH;
 
     public static void main(String[] args) throws IOException {
-        // getValue();
-        // getTransaction();
-        // getReceipt();
-        keccak256("Permit(address,address,address,uint160,uint48,uint48)");
+//         getValue();
+//         getTransaction();
+//         getReceipt();
+//        keccak256("Permit(address,address,address,uint160,uint48,uint48)");
     }
 
     // 查询余额
