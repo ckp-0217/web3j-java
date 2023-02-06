@@ -1,19 +1,29 @@
 package com.example.web3;
 
+import java.io.Console;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.ConnectException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
+import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
+import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.Transaction;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.websocket.WebSocketService;
+
+import com.example.web3.response.EthTraceTransaction;
+import com.example.web3.tx.Rpc;
 
 import io.reactivex.disposables.Disposable;
 
@@ -45,14 +55,40 @@ public class ScanService {
     }
 
     @Test // http查询交易
-    public void creatWsInTx() throws InterruptedException, ExecutionException, IOException {
-        Web3j client = Web3j
-                .build(new HttpService("https://eth-goerli.g.alchemy.com/v2/shdu4odG9tIK91rz0J9cXOcJZYM5tg06"));
-        String transactionHash = "0x1ba510c7dc00b37abe62d710b9ab8d3d225f56303756e925ab639e0f619d3c5f"; // 交易的 hash
-        EthTransaction transaction = client.ethGetTransactionByHash(transactionHash).send();
-        Transaction result = transaction.getResult(); // 获取交易信息
-        System.out.println(result.toString());
+    public void creatWsInTx() throws InterruptedException, ExecutionException, IOException, IllegalArgumentException, IllegalAccessException {
+        
+        Rpc client=new Rpc(new HttpService("https://ethnode.digifttest.com/"));
+        String transactionHash = "0x0154d27d0a8fcd23daa8cfc2f98d60ff8f69db197b35384d96cde638e1ad76a1"; // 交易的 hash
+        // EthTransaction transaction = client.ethGetTransactionByHash(transactionHash).send();
+        // EthGetTransactionReceipt ethGetTransactionReceipt = client.ethGetTransactionReceipt(transactionHash).send();
+
+        // Transaction result = transaction.getResult(); // 获取交易信息
+        // Class<?> cls = result.getClass();
+        // Field[] fields = cls.getDeclaredFields();
+        // for (Field field : fields) {
+        //     field.setAccessible(true);
+        //     System.out.println(field.getName() + ": " + field.get(result));
+        // }
+        // TransactionReceipt receipt = ethGetTransactionReceipt.getResult();
+        // Class<?> cls2 = receipt.getClass();
+        // Field[] fields2 = cls2.getDeclaredFields();
+        // for (Field field : fields2) {
+        //     field.setAccessible(true);
+        //     System.out.println(field.getName() + ": " + field.get(receipt));
+        // }
+        // System.out.println(ethGetTransactionReceipt.getResult());
+
+        Request<?, ?> request = new Request<>(
+            "debug_traceTransaction",
+            Arrays.asList(transactionHash),  // 传入请求参数
+            new HttpService("https://ethnode.digifttest.com/"),
+            EthTraceTransaction.class
+        );
+        
+     EthTraceTransaction send = (EthTraceTransaction) request.send();
+     System.out.println(send);
     }
+        
 
     @Test // ws创建交易
     public void creatWsOnBlock() throws ConnectException {
