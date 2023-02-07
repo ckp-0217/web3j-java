@@ -15,7 +15,7 @@ public class Web3Application {
 
 	public static void main(String[] args) throws ConnectException {
 		SpringApplication.run(Web3Application.class, args);
-
+		System.out.println("启动成功");
 	}
 
 }
