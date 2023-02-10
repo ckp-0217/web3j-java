@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 import com.example.web3.contract.Ballot;
 import com.example.web3.contract.Dai;
@@ -13,6 +14,7 @@ import com.example.web3.contract.LendingPool;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.web3j.abi.FunctionEncoder;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.Hash;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -35,13 +37,13 @@ public class SendTx {
     static String hash = Constant.TXHASH;
 
     public static void main(String[] args) throws Exception {
-//        getValue();
-//        getTransaction();
-//        getReceipt();
-//        keccak256("Permit(address,address,address,uint160,uint48,uint48)");
-//        deploy();
+        // getValue();
+        // getTransaction();
+        // getReceipt();
+        // keccak256("Permit(address,address,address,uint160,uint48,uint48)");
+        // deploy();
         loadAndSendTx();
-//        asyncSendTx();
+        // asyncSendTx();
     }
 
     // 查询余额
@@ -84,35 +86,32 @@ public class SendTx {
         return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, bigInteger, new BigInteger("1000000"));
     }
 
-    //部署合约
+    // 部署合约
     public static void deploy() throws Exception {
         // 创建ContractGasProvider
         Ballot ballot = Ballot.deploy(
                 web3j,
                 wallet,
-                getGasProvider()
-        ).send();
+                getGasProvider()).send();
         Optional<TransactionReceipt> transactionReceipt = ballot.getTransactionReceipt();
         String ballotAddress = ballot.getContractAddress();
         log.info("Smart contract deployed to address " + ballotAddress);
 
     }
 
-    //载入合约
+    // 载入合约
     public static void loadAndSendTx() throws Exception {
-        //玩一下测试网的AAVE
+        // 玩一下测试网的AAVE
         LendingPool lendingPool = LendingPool.load(
                 "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
                 web3j,
                 wallet,
-                getGasProvider()
-        );
+                getGasProvider());
         Dai dai = Dai.load(
                 "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
                 web3j,
                 wallet,
-                getGasProvider()
-        );
+                getGasProvider());
         TransactionReceipt approve = dai.approve(
                 "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
                 new BigInteger("100000000000000000000")).send();
@@ -132,7 +131,7 @@ public class SendTx {
         log.info("https://goerli.etherscan.io/tx/" + hash);
     }
 
-    //异步发送交易
+    // 异步发送交易
     public static void asyncSendTx() throws Exception {
 
         FastRawTransactionManager fastRawTransactionManager = new FastRawTransactionManager(web3j, wallet);
@@ -141,15 +140,15 @@ public class SendTx {
                 "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
                 web3j,
                 fastRawTransactionManager,
-                getGasProvider()
-        );
+                getGasProvider());
         Dai dai = Dai.load(
                 "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
                 web3j,
                 fastRawTransactionManager,
-                getGasProvider()
-        );
-        CompletableFuture<TransactionReceipt> approve = dai.approve("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000000000000000")).sendAsync();
+                getGasProvider());
+        CompletableFuture<TransactionReceipt> approve = dai
+                .approve("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000000000000000"))
+                .sendAsync();
         CompletableFuture<TransactionReceipt> deposit = lendingPool.deposit(
                 "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
                 new BigInteger("1000000000000000000"),
@@ -157,7 +156,16 @@ public class SendTx {
                 new BigInteger("0")).sendAsync();
         approve.thenAccept((app) -> log.info("DAI approve : " + app.getTransactionHash()));
         deposit.thenAccept((dep) -> log.info("lendingPool deposit : " + dep.getTransactionHash()));
-    }
+        org.web3j.abi.datatypes.Function function =  Dai.class;
+        String encodedFunction = FunctionEncoder.encode(function);
 
+        EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
+                Transaction.createEthCallTransaction(
+                        credentials.getAddress(),
+                        contractAddress,
+                        encodedFunction))
+                .send();
+
+    }
 
 }
