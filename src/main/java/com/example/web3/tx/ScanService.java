@@ -1,6 +1,5 @@
 package com.example.web3.tx;
 
-import org.junit.jupiter.api.Test;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
@@ -16,7 +15,7 @@ public class ScanService {
         createWss();
     }
 
-    @Test // 订阅节点 http 查询gas
+    // 订阅节点 http 查询gas
     public static Web3j createHttp() throws InterruptedException, ExecutionException {
 
         return Web3j.build(new HttpService("https://eth-goerli.g.alchemy.com/v2/shdu4odG9tIK91rz0J9cXOcJZYM5tg06"));

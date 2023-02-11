@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+
 
 import com.example.web3.contract.Ballot;
 import com.example.web3.contract.Dai;
@@ -20,6 +20,8 @@ import org.web3j.crypto.Hash;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.methods.response.*;
+import org.web3j.protocol.core.methods.request.Transaction;
+
 import org.web3j.tx.FastRawTransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.DefaultGasProvider;
@@ -42,9 +44,11 @@ public class SendTx {
         // getReceipt();
         // keccak256("Permit(address,address,address,uint160,uint48,uint48)");
         // deploy();
-        loadAndSendTx();
-        // asyncSendTx();
+//        loadAndSendTx();
+//        asyncSendTx();
+        EstimateGas();
     }
+
 
     // 查询余额
     public static void getValue() throws IOException {
@@ -146,26 +150,62 @@ public class SendTx {
                 web3j,
                 fastRawTransactionManager,
                 getGasProvider());
-        CompletableFuture<TransactionReceipt> approve = dai
-                .approve("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000000000000000"))
-                .sendAsync();
-        CompletableFuture<TransactionReceipt> deposit = lendingPool.deposit(
+//        CompletableFuture<TransactionReceipt> approve = dai
+//                .approve("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000000000000000"))
+//                .sendAsync();
+//        CompletableFuture<TransactionRece ript> deposit = lendingPool.deposit(
+//                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+//                new BigInteger("1000000000000000000"),
+//                "0xbc593fdb62ee1c1df173ad695f05689db60c28f8",
+//                new BigInteger("0")).sendAsync();
+//        approve.thenAccept((app) -> log.info("DAI approve : " + app.getTransactionHash()));
+//        deposit.thenAccept((dep) -> log.info("lendingPool deposit : " + dep.getTransactionHash()));
+
+
+    }
+
+    public static void EstimateGas() throws Exception {
+        Dai dai = Dai.load(
                 "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
-                new BigInteger("1000000000000000000"),
-                "0xbc593fdb62ee1c1df173ad695f05689db60c28f8",
-                new BigInteger("0")).sendAsync();
-        approve.thenAccept((app) -> log.info("DAI approve : " + app.getTransactionHash()));
-        deposit.thenAccept((dep) -> log.info("lendingPool deposit : " + dep.getTransactionHash()));
-        org.web3j.abi.datatypes.Function function =  dai.allowanceFunction(hash, hash);
+                web3j,
+                wallet,
+                getGasProvider());
+        //true
+        org.web3j.abi.datatypes.Function function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("1000000000000000000000"));
         String encodedFunction = FunctionEncoder.encode(function);
 
         EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
-                Transaction.(
-                        wallet.getAddress(),
-                        "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
-                        encodedFunction))
+                        Transaction.createEthCallTransaction(
+                                wallet.getAddress(),
+                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                                encodedFunction))
                 .send();
+        if (null != ethEstimateGas.getError()) {
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getCode());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getData());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
+        } else {
+            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
 
+        }
+
+        //false
+        function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000"));
+        encodedFunction = FunctionEncoder.encode(function);
+        ethEstimateGas = web3j.ethEstimateGas(
+                        Transaction.createEthCallTransaction(
+                                wallet.getAddress(),
+                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                                encodedFunction))
+                .send();
+        if (null != ethEstimateGas.getError()) {
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getCode());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getData());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
+        } else {
+            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
+
+        }
     }
 
 }
