@@ -156,13 +156,13 @@ public class SendTx {
                 new BigInteger("0")).sendAsync();
         approve.thenAccept((app) -> log.info("DAI approve : " + app.getTransactionHash()));
         deposit.thenAccept((dep) -> log.info("lendingPool deposit : " + dep.getTransactionHash()));
-        org.web3j.abi.datatypes.Function function =  Dai.class;
+        org.web3j.abi.datatypes.Function function =  dai.allowanceFunction(hash, hash);
         String encodedFunction = FunctionEncoder.encode(function);
 
         EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
-                Transaction.createEthCallTransaction(
-                        credentials.getAddress(),
-                        contractAddress,
+                Transaction.(
+                        wallet.getAddress(),
+                        "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
                         encodedFunction))
                 .send();
 

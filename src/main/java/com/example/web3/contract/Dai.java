@@ -194,6 +194,14 @@ public class Dai extends Contract {
                 }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
+    public org.web3j.abi.datatypes.Function allowanceFunction(String owner, String spender) {
+        return new org.web3j.abi.datatypes.Function(FUNC_ALLOWANCE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, owner),
+                        new org.web3j.abi.datatypes.Address(160, spender)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
+    }
+    
 
     public RemoteFunctionCall<TransactionReceipt> approve(String spender, BigInteger amount) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
@@ -202,6 +210,14 @@ public class Dai extends Contract {
                         new org.web3j.abi.datatypes.generated.Uint256(amount)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
+    }
+
+    public org.web3j.abi.datatypes.Function approveFunction(String spender, BigInteger amount) {
+        return new org.web3j.abi.datatypes.Function(
+                FUNC_APPROVE,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, spender),
+                        new org.web3j.abi.datatypes.generated.Uint256(amount)),
+                Collections.<TypeReference<?>>emptyList());
     }
 
     public RemoteFunctionCall<BigInteger> balanceOf(String account) {
