@@ -46,7 +46,8 @@ public class SendTx {
         // deploy();
 //        loadAndSendTx();
 //        asyncSendTx();
-        EstimateGas();
+        EstimateGasSendTx();
+//        EstimateGas();
     }
 
 
@@ -90,6 +91,16 @@ public class SendTx {
         return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, bigInteger, new BigInteger("1000000"));
     }
 
+    public static ContractGasProvider getGasProvider(BigInteger gasUsed) throws Exception {
+        // 创建ContractGasProvider
+        BigInteger gasLimit = gasUsed.multiply(new BigInteger("12")).divide(new BigInteger("10"));
+        BigInteger chainId = web3j.ethChainId().send().getChainId();
+
+        EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
+        BigInteger maxPreGas = block.getBlock().getBaseFeePerGas().multiply(new BigInteger("2")).add(new BigInteger("1000000"));
+        return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, new BigInteger("1000000"), gasLimit);
+    }
+
     // 部署合约
     public static void deploy() throws Exception {
         // 创建ContractGasProvider
@@ -103,7 +114,7 @@ public class SendTx {
 
     }
 
-    // 载入合约
+    // 载入合约 并交易
     public static void loadAndSendTx() throws Exception {
         // 玩一下测试网的AAVE
         LendingPool lendingPool = LendingPool.load(
@@ -129,6 +140,80 @@ public class SendTx {
                 new BigInteger("0")).send();
         log.info("lendingPool deposit : " + deposit.getTransactionHash());
         ethScan(deposit.getTransactionHash());
+    }
+
+    // 估算交易
+    public static void EstimateGas() throws Exception {
+        Dai dai = Dai.load(
+                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                web3j,
+                wallet,
+                getGasProvider());
+        //false
+        org.web3j.abi.datatypes.Function function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("1000000000000000000000"));
+        String encodedFunction = FunctionEncoder.encode(function);
+
+        EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
+                        Transaction.createEthCallTransaction(
+                                wallet.getAddress(),
+                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                                encodedFunction))
+                .send();
+        if (null != ethEstimateGas.getError()) {
+            log.info("ethEstimateGas :" + ethEstimateGas.getId());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getData());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
+        } else {
+            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
+
+        }
+
+        //true
+        function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000"));
+        encodedFunction = FunctionEncoder.encode(function);
+        ethEstimateGas = web3j.ethEstimateGas(
+                        Transaction.createEthCallTransaction(
+                                wallet.getAddress(),
+                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                                encodedFunction))
+                .send();
+        if (null != ethEstimateGas.getError()) {
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getCode());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getData());
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
+        } else {
+            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
+            log.info("ethEstimateGas :" + ethEstimateGas.getId());
+
+        }
+    }
+
+    // 使用预估gas进行交易
+    public static void EstimateGasSendTx() throws Exception {
+        Dai dai = Dai.load(
+                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                web3j,
+                wallet,
+                getGasProvider());
+        //true
+        org.web3j.abi.datatypes.Function function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("10"));
+        String encodedFunction = FunctionEncoder.encode(function);
+
+        EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
+                        Transaction.createEthCallTransaction(
+                                wallet.getAddress(),
+                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+                                encodedFunction))
+                .send();
+        if (null != ethEstimateGas.getError()) {
+            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
+        } else {
+            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
+            dai.setGasProvider(getGasProvider(ethEstimateGas.getAmountUsed()));
+            TransactionReceipt transfer = dai.transfer("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("10")).send();
+            ethScan(transfer.getTransactionHash());
+
+        }
     }
 
     public static void ethScan(String hash) {
@@ -164,48 +249,5 @@ public class SendTx {
 
     }
 
-    public static void EstimateGas() throws Exception {
-        Dai dai = Dai.load(
-                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
-                web3j,
-                wallet,
-                getGasProvider());
-        //true
-        org.web3j.abi.datatypes.Function function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("1000000000000000000000"));
-        String encodedFunction = FunctionEncoder.encode(function);
-
-        EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
-                        Transaction.createEthCallTransaction(
-                                wallet.getAddress(),
-                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
-                                encodedFunction))
-                .send();
-        if (null != ethEstimateGas.getError()) {
-            log.info("ethEstimateGas :" + ethEstimateGas.getError().getCode());
-            log.info("ethEstimateGas :" + ethEstimateGas.getError().getData());
-            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
-        } else {
-            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
-
-        }
-
-        //false
-        function = dai.transferFunction("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000"));
-        encodedFunction = FunctionEncoder.encode(function);
-        ethEstimateGas = web3j.ethEstimateGas(
-                        Transaction.createEthCallTransaction(
-                                wallet.getAddress(),
-                                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
-                                encodedFunction))
-                .send();
-        if (null != ethEstimateGas.getError()) {
-            log.info("ethEstimateGas :" + ethEstimateGas.getError().getCode());
-            log.info("ethEstimateGas :" + ethEstimateGas.getError().getData());
-            log.info("ethEstimateGas :" + ethEstimateGas.getError().getMessage());
-        } else {
-            log.info("ethEstimateGas :" + ethEstimateGas.getAmountUsed());
-
-        }
-    }
 
 }
