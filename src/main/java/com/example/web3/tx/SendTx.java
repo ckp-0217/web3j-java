@@ -213,6 +213,7 @@ public class SendTx {
             dai.setGasProvider(getGasProvider(ethEstimateGas.getAmountUsed()));
             TransactionReceipt transfer = dai.transfer("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("10")).send();
             ethScan(transfer.getTransactionHash());
+            
 
         }
     }
