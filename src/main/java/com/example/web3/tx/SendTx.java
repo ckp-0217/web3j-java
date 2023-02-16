@@ -84,21 +84,22 @@ public class SendTx {
         // 创建ContractGasProvider
 
         BigInteger chainId = web3j.ethChainId().send().getChainId();
-        BigInteger bigInteger = new BigInteger("1500000000");
+        BigInteger eth_maxPriorityFeePerGas= web3j.ethMaxPriorityFeePerGas().send().getMaxPriorityFeePerGas();
 
         EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
-        BigInteger maxPreGas = block.getBlock().getBaseFeePerGas().multiply(new BigInteger("2")).add(bigInteger);
-        return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, bigInteger, new BigInteger("1000000"));
+        BigInteger maxPreGas = block.getBlock().getBaseFeePerGas().multiply(new BigInteger("2")).add(eth_maxPriorityFeePerGas);
+        return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, eth_maxPriorityFeePerGas, new BigInteger("1000000"));
     }
 
     public static ContractGasProvider getGasProvider(BigInteger gasUsed) throws Exception {
         // 创建ContractGasProvider
         BigInteger gasLimit = gasUsed.multiply(new BigInteger("12")).divide(new BigInteger("10"));
         BigInteger chainId = web3j.ethChainId().send().getChainId();
+        BigInteger eth_maxPriorityFeePerGas= web3j.ethMaxPriorityFeePerGas().send().getMaxPriorityFeePerGas();
 
         EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
-        BigInteger maxPreGas = block.getBlock().getBaseFeePerGas().multiply(new BigInteger("2")).add(new BigInteger("1000000"));
-        return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, new BigInteger("1000000"), gasLimit);
+        BigInteger maxPreGas = block.getBlock().getBaseFeePerGas().multiply(new BigInteger("2")).add(eth_maxPriorityFeePerGas);
+        return new StaticEIP1559GasProvider(chainId.longValue(), maxPreGas, eth_maxPriorityFeePerGas, gasLimit);
     }
 
     // 部署合约
@@ -235,16 +236,16 @@ public class SendTx {
                 web3j,
                 fastRawTransactionManager,
                 getGasProvider());
-//        CompletableFuture<TransactionReceipt> approve = dai
-//                .approve("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000000000000000"))
-//                .sendAsync();
-//        CompletableFuture<TransactionRece ript> deposit = lendingPool.deposit(
-//                "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
-//                new BigInteger("1000000000000000000"),
-//                "0xbc593fdb62ee1c1df173ad695f05689db60c28f8",
-//                new BigInteger("0")).sendAsync();
-//        approve.thenAccept((app) -> log.info("DAI approve : " + app.getTransactionHash()));
-//        deposit.thenAccept((dep) -> log.info("lendingPool deposit : " + dep.getTransactionHash()));
+       CompletableFuture<TransactionReceipt> approve = dai
+               .approve("0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210", new BigInteger("100000000000000000000"))
+               .sendAsync();
+       CompletableFuture<TransactionReceipt> deposit = lendingPool.deposit(
+               "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+               new BigInteger("1000000000000000000"),
+               "0xbc593fdb62ee1c1df173ad695f05689db60c28f8",
+               new BigInteger("0")).sendAsync();
+       approve.thenAccept((app) -> log.info("DAI approve : " + app.getTransactionHash()));
+       deposit.thenAccept((dep) -> log.info("lendingPool deposit : " + dep.getTransactionHash()));
 
 
     }
