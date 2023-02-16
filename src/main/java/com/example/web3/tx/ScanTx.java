@@ -3,10 +3,7 @@ package com.example.web3.tx;
 import java.util.List;
 
 import org.web3j.crypto.Credentials;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.Transaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.core.methods.response.*;
 
 import com.example.web3.Gloab.Constant;
 
@@ -26,17 +23,22 @@ public class ScanTx {
     public static void BlockchainBlockNumberListener() {
         web3j.blockFlowable(false).subscribe(block -> {
             List<EthBlock.TransactionResult> transactions = block.getBlock().getTransactions();
-            for (EthBlock.TransactionResult transactionResult : transactions) {
-                EthBlock.TransactionObject transaction = (EthBlock.TransactionObject) transactionResult.get();
-                String txHash = transaction.getHash();
-                System.out.println(txHash);
-                // EthGetTransactionReceipt receipt = web3j.ethGetTransactionReceipt(txHash).send();
-                // if (receipt.getTransactionReceipt().isPresent()) {
-                //     TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
-                //     // Do something with transaction and transactionReceipt
-                // }
+            System.out.println("block number :" + block.getBlock().getNumber());
+            for (int i = 0; i < transactions.size(); i++) {
+                EthBlock.TransactionResult transactionResult = transactions.get(i);
+                String transactionHash = (String) transactionResult.get();
+                EthGetTransactionReceipt receipt = web3j.ethGetTransactionReceipt(transactionHash).send();
+                TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
+                List<Log> logs = transactionReceipt.getLogs();
+                for (int j = 0; j < logs.size(); j++) {
+                    Log log = logs.get(j);
+                    // 处理日志
+                    System.out.println(log);
+                }
+//                System.out.println(transactionReceipt.toString());
             }
         });
     }
-    
+
+
 }
