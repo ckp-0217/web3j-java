@@ -1,4 +1,4 @@
-package com.example.web3.tx;
+package com.example.web3.model;
 
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.JsonRpc2_0Web3j;

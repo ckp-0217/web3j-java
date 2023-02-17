@@ -1,9 +1,9 @@
-package com.example.web3.Gloab;
+package com.example.web3.util;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.http.HttpService;
 
-import com.example.web3.tx.Rpc;
+import com.example.web3.model.Rpc;
 
 public class Constant {
     static public Rpc HTTPRPC = new Rpc(

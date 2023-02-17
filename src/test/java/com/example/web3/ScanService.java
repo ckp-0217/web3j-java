@@ -22,8 +22,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.websocket.WebSocketService;
 
+import com.example.web3.model.Rpc;
 import com.example.web3.response.EthTraceTransaction;
-import com.example.web3.tx.Rpc;
 
 import io.reactivex.disposables.Disposable;
 
