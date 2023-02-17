@@ -6,7 +6,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.*;
 
 import com.example.web3.Gloab.Constant;
-
+import com.example.web3.model.Rpc;
 
 public class ScanTx {
 
@@ -29,6 +29,8 @@ public class ScanTx {
                 String transactionHash = (String) transactionResult.get();
                 EthGetTransactionReceipt receipt = web3j.ethGetTransactionReceipt(transactionHash).send();
                 TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
+                //处理TransactionReceipt
+                
                 List<Log> logs = transactionReceipt.getLogs();
                 for (int j = 0; j < logs.size(); j++) {
                     Log log = logs.get(j);

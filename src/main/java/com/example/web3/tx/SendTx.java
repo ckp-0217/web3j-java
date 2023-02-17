@@ -11,6 +11,8 @@ import java.util.concurrent.CompletableFuture;
 import com.example.web3.contract.Ballot;
 import com.example.web3.contract.Dai;
 import com.example.web3.contract.LendingPool;
+import com.example.web3.model.Rpc;
+
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
