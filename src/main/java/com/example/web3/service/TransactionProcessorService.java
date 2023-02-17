@@ -11,6 +11,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import com.example.web3.model.Rpc;
 import com.example.web3.util.Constant;
+import org.web3j.tx.Contract;
 
 public class TransactionProcessorService {
     static Rpc web3j = Constant.HTTPRPC_MAIN;
@@ -30,6 +31,7 @@ public class TransactionProcessorService {
 
             // 处理日志
             defiResolver.resolveEvent(log);
+
         }
     }
 
