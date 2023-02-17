@@ -27,7 +27,7 @@ public class TransactionProcessorService {
         for (int j = 0; j < logs.size(); j++) {
             Log log = logs.get(j);
             // 处理日志
-            System.out.println("tx : " + j + "index: " + log.getLogIndex() + " address: " + log.getAddress()
+            System.out.println("tx : " + j + " index: " + log.getLogIndex() + " address: " + log.getAddress()
                     + " topic: " + log.getTopics() + " data: " + log.getData());
         }
     }
