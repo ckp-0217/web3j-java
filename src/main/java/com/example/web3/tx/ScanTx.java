@@ -5,14 +5,15 @@ import java.util.List;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.*;
 
-import com.example.web3.Gloab.Constant;
 import com.example.web3.model.Rpc;
+import com.example.web3.util.Constant;
+
 
 public class ScanTx {
 
     // private static final Logger log = LoggerFactory.getLogger(ScanTx.class);
 
-    static Rpc web3j = Constant.HTTPRPC;
+    static Rpc web3j = Constant.HTTPRPC_GOERLI;
     static Credentials wallet = Constant.WALLET;
     static String hash = Constant.TXHASH;
 

@@ -13,7 +13,7 @@ import com.example.web3.util.Constant;
 public class BlockInfoProcessorService {
     // private static final Logger log = LoggerFactory.getLogger(ScanTx.class);
 
-    static Rpc web3j = Constant.HTTPRPC;
+    static Rpc web3j = Constant.HTTPRPC_GOERLI;
     static Credentials wallet = Constant.WALLET;
     static String hash = Constant.TXHASH;
     static TransactionProcessorService transactionProcessorService=new TransactionProcessorService();

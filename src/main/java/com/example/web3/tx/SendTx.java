@@ -12,6 +12,7 @@ import com.example.web3.contract.Ballot;
 import com.example.web3.contract.Dai;
 import com.example.web3.contract.LendingPool;
 import com.example.web3.model.Rpc;
+import com.example.web3.util.Constant;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -31,12 +32,11 @@ import org.web3j.tx.gas.StaticEIP1559GasProvider;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
-import com.example.web3.Gloab.Constant;
 
 public class SendTx {
     private static final Logger log = LoggerFactory.getLogger(SendTx.class);
 
-    static Rpc web3j = Constant.HTTPRPC;
+    static Rpc web3j = Constant.HTTPRPC_GOERLI;
     static Credentials wallet = Constant.WALLET;
     static String hash = Constant.TXHASH;
 

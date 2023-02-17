@@ -12,7 +12,7 @@ import com.example.web3.model.Rpc;
 import com.example.web3.util.Constant;
 
 public class TransactionProcessorService {
-    static Rpc web3j = Constant.HTTPRPC;
+    static Rpc web3j = Constant.HTTPRPC_MAIN;
 
     public void processTransaction(Transaction tx) throws IOException {
         // 获取交易receipt
