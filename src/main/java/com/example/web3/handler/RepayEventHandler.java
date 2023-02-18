@@ -33,7 +33,7 @@ public class RepayEventHandler implements EventHandler {
         typedResponse.repayer = (String) indexedValues.get(2).getValue();
         typedResponse.amount = (BigInteger) nonIndexedValues.get(0).getValue();
 
-        System.out.println("用户："+typedResponse.user+"在AAVE偿还："+typedResponse.reserve+" "+typedResponse.amount+"数量");
+        System.out.println("用户："+typedResponse.user+"在AAVE偿还："+typedResponse.reserve+" "+typedResponse.amount);
 
 
     }

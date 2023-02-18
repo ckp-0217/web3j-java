@@ -34,7 +34,7 @@ public class WithdrawEventHandler implements EventHandler {
         typedResponse.amount = (BigInteger) nonIndexedValues.get(0).getValue();
 
         System.out.println(
-                "用户：" + typedResponse.user + "在AAVE取出：" + typedResponse.reserve + " " + typedResponse.amount + "数量");
+                "用户：" + typedResponse.user + "在AAVE取出：" + typedResponse.reserve + " " + typedResponse.amount);
 
     }
 
