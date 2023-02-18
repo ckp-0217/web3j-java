@@ -9,14 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 public class DefiConfig {
-    private Map<String, List<String>> defiEventTopics;
-    private Map<String, DefiParser> defiParserMap;
+    private Map<String, List<String>> defiEventTopics = new HashMap<>();
+    private Map<String, DefiParser> defiParserMap = new HashMap<>();
 
     public DefiConfig() {
         // 初始化 defiEventTopics map
-        defiEventTopics = new HashMap<>();
 
-        //AAVE
+        // AAVE
         AaveParser aaveParser = new AaveParser();
         defiEventTopics.put(aaveParser.address, aaveParser.topicList);
         defiParserMap.put(aaveParser.address, aaveParser);
@@ -24,7 +23,6 @@ public class DefiConfig {
         // 其他defi项目的topic0列表
 
     }
-
 
     public List<String> getTopic0List(String address) {
         return defiEventTopics.get(address);
