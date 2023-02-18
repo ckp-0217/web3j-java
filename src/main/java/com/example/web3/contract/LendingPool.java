@@ -1117,6 +1117,14 @@ public class LendingPool extends Contract {
         public BigInteger borrowRateMode;
 
         public BigInteger borrowRate;
+
+        @Override
+        public String toString() {
+            return "BorrowEventResponse [reserve=" + reserve + ", onBehalfOf=" + onBehalfOf + ", referral=" + referral
+                    + ", user=" + user + ", amount=" + amount + ", borrowRateMode=" + borrowRateMode + ", borrowRate="
+                    + borrowRate + "]";
+        }
+        
     }
 
     public static class DepositEventResponse extends BaseEventResponse {

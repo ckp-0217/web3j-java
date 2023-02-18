@@ -13,9 +13,9 @@ public class DefiResolver {
         this.defiConfig = defiConfig;
     }
 
-
     public void resolveEvent(Log log) {
         List<String> topic0List = defiConfig.getTopic0List(log.getAddress());
+        System.out.println(log.getAddress());
         if (topic0List != null) {
             String topic0 = log.getTopics().get(0);
             if (topic0List.contains(topic0)) {
@@ -23,7 +23,8 @@ public class DefiResolver {
                 DefiParser parser = defiConfig.getParser(log.getAddress());
 
                 parser.parseEventByTopic0(log, topic0);
-
+                System.out.println(log);
+                System.out.println(topic0);
             }
         }
     }
