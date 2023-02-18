@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Transaction Log</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Transaction Log</h1>
+    <table id="log-table">
+        <thead>
+            <tr>
+                <th>Block</th>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Currency</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be added dynamically -->
+        </tbody>
+    </table>
+    <script>
+        var ws = new WebSocket("ws://your-backend-hostname:your-backend-port");
+        ws.onmessage = function (event) {
+            var message = JSON.parse(event.data);
+            // 处理接收到的消息
+            addRow(message.block, message.time, message.action, message.currency, amount.message);
+            // 更新前端UI
+        };
+
+        function addRow(block, time, action, currency, amount) {
+            var table = document.getElementById("log-table");
+            var row = table.insertRow(-1);
+            var blockCell = row.insertCell(0);
+            var timeCell = row.insertCell(1);
+            var actionCell = row.insertCell(2);
+            var currencyCell = row.insertCell(3);
+            var amountCell = row.insertCell(4);
+            blockCell.innerHTML = block;
+            timeCell.innerHTML = time;
+            actionCell.innerHTML = action;
+            currencyCell.innerHTML = currency;
+            amountCell.innerHTML = amount;
+        }
+    </script>
+</body>
+
+</html>
