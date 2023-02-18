@@ -14,7 +14,7 @@ import com.example.web3.util.Rpc;
 public class BlockInfoProcessorService {
     // private static final Logger log = LoggerFactory.getLogger(ScanTx.class);
 
-    static Rpc web3j = Constant.HTTPRPC_GOERLI;
+    static Rpc web3j = Constant.HTTPRPC_MAIN;
     static Credentials wallet = Constant.WALLET;
     static String hash = Constant.TXHASH;
     static TransactionProcessorService transactionProcessorService=new TransactionProcessorService();
@@ -33,25 +33,8 @@ public class BlockInfoProcessorService {
                 TransactionResult transactionResult = transactions.get(i);
                 String transactionHash = (String) transactionResult.get();
                 transactionProcessorService.processTransactionByHash(transactionHash);
-
-
-
-
-
-                //获取到了交易hash
-                // EthGetTransactionReceipt receipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-                // TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
-                // 处理TransactionReceipt
-
-
-                // List<Log> logs = transactionReceipt.getLogs();
-                // for (int j = 0; j < logs.size(); j++) {
-                //     Log log = logs.get(j);
-                //     // 处理日志
-                //     System.out.println(log);
-                // }
-                // System.out.println(transactionReceipt.toString());
             }
+            System.out.println("block number :" + block.getBlock().getNumber()+" 处理完成");
         });
     }
 

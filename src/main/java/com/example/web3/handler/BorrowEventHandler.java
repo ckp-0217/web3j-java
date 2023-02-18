@@ -5,11 +5,9 @@ import java.math.BigInteger;
 import org.web3j.abi.EventValues;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.protocol.core.methods.response.Log;
-import org.web3j.tx.Contract;
 import org.web3j.abi.datatypes.Type;
 
 import com.example.web3.contract.LendingPool.BorrowEventResponse;
-import com.example.web3.contract.LendingPool.DepositEventResponse;
 import com.example.web3.util.function;
 
 public class BorrowEventHandler implements EventHandler {
@@ -24,7 +22,6 @@ public class BorrowEventHandler implements EventHandler {
 
     @Override
     public void handle(Event event, Log log) {
-        // TODO Auto-generated method stub
 
         EventValues eventValues = function.staticExtractEventParameters(event, log);
         List<Type> indexedValues = eventValues.getIndexedValues();
@@ -40,7 +37,7 @@ public class BorrowEventHandler implements EventHandler {
         typedResponse.borrowRateMode = (BigInteger) nonIndexedValues.get(2).getValue();
         typedResponse.borrowRate = (BigInteger) nonIndexedValues.get(3).getValue();
 
-        System.out.println(typedResponse);
+        System.out.println("用户："+typedResponse.user+"在AAVE借入："+typedResponse.reserve+" "+typedResponse.amount);
 
     }
 
