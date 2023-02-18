@@ -5,8 +5,8 @@ import java.util.List;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.*;
 
-import com.example.web3.model.Rpc;
 import com.example.web3.util.Constant;
+import com.example.web3.util.Rpc;
 
 
 public class ScanTx {

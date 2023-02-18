@@ -3,13 +3,13 @@ package com.example.web3.handler;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.protocol.core.methods.response.Log;
 
-public class DepositEventHandler implements EventHandler {
-    private static final DepositEventHandler instance = new DepositEventHandler();
+public class WithdrawEventHandler implements EventHandler {
+    private static final WithdrawEventHandler instance = new WithdrawEventHandler();
 
-    private DepositEventHandler() {
+    private WithdrawEventHandler() {
     }
 
-    public static DepositEventHandler getInstance() {
+    public static WithdrawEventHandler getInstance() {
         return instance;
     }
 

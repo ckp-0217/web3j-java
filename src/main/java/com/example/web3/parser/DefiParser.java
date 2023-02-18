@@ -1,4 +1,4 @@
-package com.example.web3.model;
+package com.example.web3.parser;
 
 import org.web3j.abi.datatypes.Event;
 import org.web3j.protocol.core.methods.response.Log;

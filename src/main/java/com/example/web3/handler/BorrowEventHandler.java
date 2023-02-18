@@ -13,6 +13,14 @@ import com.example.web3.contract.LendingPool.DepositEventResponse;
 import com.example.web3.util.function;
 
 public class BorrowEventHandler implements EventHandler {
+    private static final BorrowEventHandler instance = new BorrowEventHandler();
+
+    private BorrowEventHandler() {
+    }
+
+    public static BorrowEventHandler getInstance() {
+        return instance;
+    }
 
     @Override
     public void handle(Event event, Log log) {

@@ -6,8 +6,9 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 import org.web3j.protocol.core.methods.response.Transaction;
-import com.example.web3.model.Rpc;
+
 import com.example.web3.util.Constant;
+import com.example.web3.util.Rpc;
 
 
 public class BlockInfoProcessorService {

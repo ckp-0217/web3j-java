@@ -17,8 +17,8 @@ class AAVEEventResolution {
 
     @Test
     void getLogs() throws IOException {
-        service.processTransactionByHash(AAVE_DEPOSIT_TXHASH);
-        // service.processTransactionByHash(AAVE_BORROW_TXHASH);
+        // service.processTransactionByHash(AAVE_DEPOSIT_TXHASH);
+        service.processTransactionByHash(AAVE_BORROW_TXHASH);
 
     }
 }

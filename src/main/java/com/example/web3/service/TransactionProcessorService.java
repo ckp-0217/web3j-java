@@ -9,8 +9,9 @@ import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-import com.example.web3.model.Rpc;
 import com.example.web3.util.Constant;
+import com.example.web3.util.Rpc;
+
 import org.web3j.tx.Contract;
 
 public class TransactionProcessorService {

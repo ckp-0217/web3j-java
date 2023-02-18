@@ -1,12 +1,12 @@
 package com.example.web3.config;
 
-import com.example.web3.model.AaveParser;
-import com.example.web3.model.DefiParser;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.example.web3.parser.AaveParser;
+import com.example.web3.parser.DefiParser;
 
 public class DefiConfig {
     private Map<String, List<String>> defiEventTopics = new HashMap<>();

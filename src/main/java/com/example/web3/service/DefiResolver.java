@@ -1,7 +1,8 @@
 package com.example.web3.service;
 
 import com.example.web3.config.DefiConfig;
-import com.example.web3.model.DefiParser;
+import com.example.web3.parser.DefiParser;
+
 import org.web3j.protocol.core.methods.response.Log;
 
 import java.util.List;
@@ -23,8 +24,7 @@ public class DefiResolver {
                 DefiParser parser = defiConfig.getParser(log.getAddress());
 
                 parser.parseEventByTopic0(log, topic0);
-                System.out.println(log);
-                System.out.println(topic0);
+
             }
         }
     }

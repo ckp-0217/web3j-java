@@ -3,8 +3,6 @@ package com.example.web3.util;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.http.HttpService;
 
-import com.example.web3.model.Rpc;
-
 public class Constant {
     static public Rpc HTTPRPC_GOERLI = new Rpc(
             new HttpService("https://eth-goerli.g.alchemy.com/v2/shdu4odG9tIK91rz0J9cXOcJZYM5tg06"));
