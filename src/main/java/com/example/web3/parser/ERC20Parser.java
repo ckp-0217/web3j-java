@@ -1,7 +1,8 @@
 package com.example.web3.parser;
 
-import com.example.web3.contract.LendingPool;
+import com.example.web3.contract.Dai;
 import com.example.web3.handler.EventHandler;
+import com.example.web3.handler.TransferEventHandler;
 import com.example.web3.handler.AAVE.BorrowEventHandler;
 import com.example.web3.handler.AAVE.DepositEventHandler;
 import com.example.web3.handler.AAVE.RepayEventHandler;
@@ -21,9 +22,9 @@ import org.web3j.protocol.core.methods.response.Log;
 import java.util.*;
 import java.util.concurrent.Flow.Subscription;
 
-import static com.example.web3.contract.LendingPool.*;
+import static com.example.web3.contract.Dai.*;
 
-public class AaveParser implements DefiParser {
+public class ERC20Parser implements DefiParser {
     static Rpc web3j = Constant.HTTPRPC_MAIN;
 
     public String address = "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9";
@@ -31,15 +32,12 @@ public class AaveParser implements DefiParser {
     public List<Event> eventList = new ArrayList<>();
     public Map<String, EventHandler> eventHandlerMap = new HashMap<>();
     public Map<String, Event> eventMap = new HashMap<>();
-    public LendingPool wrapper;
+    public Dai wrapper;
 
-    public AaveParser() {
+    public ERC20Parser() {
         // 初始化需要解析的事件
         eventList = Arrays.asList(
-                BORROW_EVENT,
-                DEPOSIT_EVENT,
-                REPAY_EVENT,
-                WITHDRAW_EVENT);
+            TRANSFER_EVENT);
 
         // 添加 topic0
         for (Event event : eventList) {
@@ -50,8 +48,8 @@ public class AaveParser implements DefiParser {
 
             // 创建事件处理器实例并存储到 map 中
             switch (event.getName()) {
-                case "Deposit":
-                    eventHandlerMap.put(topic0, DepositEventHandler.getInstance());
+                case "Transfer":
+                    eventHandlerMap.put(topic0, TransferEventHandler.getInstance());
                     break;
                 case "Borrow":
                     eventHandlerMap.put(topic0, BorrowEventHandler.getInstance());
@@ -67,7 +65,7 @@ public class AaveParser implements DefiParser {
     }
 
     public static void main(String[] args) {
-        new AaveParser().startListening(web3j);
+        new ERC20Parser().startListening(web3j);
     }
     @Override
     public void parseEvent(Log log, Event event) {
@@ -92,10 +90,7 @@ public class AaveParser implements DefiParser {
      */
     public void startListening(Web3j web3j) {
         // Create an Ethereum filter with the topic list
-        EthFilter filter = new EthFilter(
-                DefaultBlockParameterName.EARLIEST,
-                DefaultBlockParameterName.LATEST,
-                address);
+        EthFilter filter = new EthFilter(address);
         for (String topic : topicList) {
             filter.addSingleTopic(topic);
         }
@@ -107,7 +102,7 @@ public class AaveParser implements DefiParser {
                     parseEvent(log, event);
                 });
         System.out.println(subscribe);
-        System.out.println("Started listening to Aave events.");
+        System.out.println("Started listening to ERC20 events.");
     }
 
     /**
@@ -116,7 +111,7 @@ public class AaveParser implements DefiParser {
     // public void stopListening() {
     //     if (subscribe != null) {
     //         subscribe.cancel();
-    //         System.out.println("Stopped listening to Aave events.");
+    //         System.out.println("Stopped listening to ERC20 events.");
     //     }
     // }
 

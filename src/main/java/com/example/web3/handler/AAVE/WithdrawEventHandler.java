@@ -1,4 +1,4 @@
-package com.example.web3.handler;
+package com.example.web3.handler.AAVE;
 
 import java.util.List;
 import java.math.BigInteger;
@@ -9,6 +9,7 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.protocol.core.methods.response.Log;
 
 import com.example.web3.contract.LendingPool.WithdrawEventResponse;
+import com.example.web3.handler.EventHandler;
 import com.example.web3.util.function;
 
 public class WithdrawEventHandler implements EventHandler {

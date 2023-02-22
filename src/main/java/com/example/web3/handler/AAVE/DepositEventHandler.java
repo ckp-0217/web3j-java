@@ -1,4 +1,4 @@
-package com.example.web3.handler;
+package com.example.web3.handler.AAVE;
 
 import java.util.List;
 import java.math.BigInteger;
@@ -10,6 +10,7 @@ import org.web3j.protocol.core.methods.response.Log;
 
 import com.example.web3.contract.LendingPool.DepositEventResponse;
 import com.example.web3.contract.LendingPool.RepayEventResponse;
+import com.example.web3.handler.EventHandler;
 import com.example.web3.util.function;
 
 public class DepositEventHandler implements EventHandler {
